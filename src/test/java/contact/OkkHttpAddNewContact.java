@@ -12,23 +12,26 @@ import java.io.IOException;
 public class OkkHttpAddNewContact {
 
     public static final MediaType JSON = MediaType.get("application/json;charset=utf-8");
+    Gson gson = new Gson();
+    OkHttpClient client = new OkHttpClient();
+    String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imdvb2R3aW40OUBtYWlsLnJ1In0.d7BPB8XKJCzQScHguPqhaYvHrQpV1F-Qy_NXkSddg9s";
 
 
     @Test
     public void addNewContact() throws IOException {
+
+        int index = (int) (System.currentTimeMillis()/1000)%3600;
+
         ContactDto contactDto = ContactDto.builder()
                 .address("Haifa")
                 .description("Friend")
-                .email("ooop123@gmail.com")
-                .id(14689)
+                .email("ooop"+index+"@gmail.com")
+                .id(index)
                 .lastName("Petr")
                 .name("Ivanof")
-                .phone("0534583")
+                .phone("0534"+index)
                 .build();
 
-        Gson gson = new Gson();
-        OkHttpClient client = new OkHttpClient();
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imdvb2R3aW40OUBtYWlsLnJ1In0.d7BPB8XKJCzQScHguPqhaYvHrQpV1F-Qy_NXkSddg9s";
 
         RequestBody requestBody = RequestBody.create(gson.toJson(contactDto), JSON);
         Request request = new Request.Builder()
@@ -41,12 +44,9 @@ public class OkkHttpAddNewContact {
 
         String responceJson = response.body().string();
         ContactDto contactDto1 = gson.fromJson(responceJson, ContactDto.class);
-        ErrorDto errorDto = gson.fromJson(responceJson, ErrorDto.class);
-        System.out.println(errorDto.getMessage());
-        System.out.println(errorDto.getDetails());
 
         Assert.assertTrue(response.isSuccessful());
-        Assert.assertEquals("Ivan", contactDto1.getName());
+        Assert.assertEquals(contactDto.getName(), contactDto1.getName());
 
     }
 
@@ -61,10 +61,6 @@ public class OkkHttpAddNewContact {
                 .name("Ivan")
                 .phone("0537234566")
                 .build();
-
-        Gson gson = new Gson();
-        OkHttpClient client = new OkHttpClient();
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6Imdvb2R3aW40OUBtYWlsLnJ1In0.d7BPB8XKJCzQScHguPqhaYvHrQpV1F-Qy_NXkSddg9s";
 
         RequestBody requestBody = RequestBody.create(gson.toJson(contactDto), JSON);
         Request request = new Request.Builder()
@@ -96,8 +92,6 @@ public class OkkHttpAddNewContact {
                 .phone("0537234566")
                 .build();
 
-        Gson gson = new Gson();
-        OkHttpClient client = new OkHttpClient();
         String token = "";
 
         RequestBody requestBody = RequestBody.create(gson.toJson(contactDto), JSON);
